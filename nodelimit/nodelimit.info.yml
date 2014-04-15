@@ -1,0 +1,5 @@
+name: Node Limit
+type: module
+description: 'Allows to limit the creation of node of certain type'
+package: CleverAge
+core: 8.x

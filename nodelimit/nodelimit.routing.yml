@@ -1,0 +1,15 @@
+nodelimit.admin_config_section:
+  path: '/admin/config/cleverage'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Clever Age'
+  requirements:
+    _permission: 'access administration pages'
+
+nodelimit.admin_config_settings:
+  path: '/admin/config/cleverage/nodelimit'
+  defaults:
+    _form: '\Drupal\nodelimit\Form\ConfigForm'
+    _title: 'Node Limit'
+  requirements:
+    _permission: 'access administration pages'

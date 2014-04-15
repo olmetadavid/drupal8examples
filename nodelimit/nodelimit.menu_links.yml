@@ -1,0 +1,13 @@
+nodelimit.admin_config_section:
+  title: 'Clever Age'
+  parent: system.admin_config
+  description: 'Configure Clever Age Modules.'
+  route_name: nodelimit.admin_config_section
+  weight: 0
+
+nodelimit.admin_config_settings:
+  title: 'Node Limit'
+  parent: nodelimit.admin_config_section
+  description: 'Configure the Node Limit module.'
+  route_name: nodelimit.admin_config_settings
+  weight: 0
