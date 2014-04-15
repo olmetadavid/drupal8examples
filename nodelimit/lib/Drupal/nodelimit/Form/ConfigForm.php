@@ -33,13 +33,16 @@ class ConfigForm extends ConfigFormBase {
     // Get the config object.
     $config = \Drupal::config('nodelimit.settings');
 
-    // Add the form component.
-    $form['limit'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Limit for node creation.'),
-      '#description' => $this->t('Enter the limit of node creation for this type.'),
-      '#default_value' => $config->get('limit'),
-    );
+    // Add the form components.
+    $node_types = node_type_get_names();
+    foreach ($node_types as $type => $name) {
+      $form['limit_' . $type] = array(
+        '#type' => 'textfield',
+        '#title' => $this->t('Limit for node creation of type @type.', array('@type' => $type)),
+        '#description' => $this->t('Enter the limit of node creation for this type.'),
+        '#default_value' => $config->get('limit_' . $type),
+      );
+    }
 
     return parent::buildForm($form, $form_state);
   }
@@ -48,8 +51,13 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    if ( ((int)$form_state['values']['limit']) <= 0 ) {
-      $this->setFormError('limit', $form_state, $this->t('You should enter a number upper to 0.'));
+
+    // Check all entries.
+    $node_types = node_type_get_names();
+    foreach ($node_types as $type => $name) {
+      if ( ((int)$form_state['values']['limit_' . $type]) <= 0 ) {
+        $this->setFormError('limit_' . $type, $form_state, $this->t('You should enter a number upper to 0 for @type.', array('@type' => $type)));
+      }
     }
   }
 
@@ -57,8 +65,19 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+
+    // Get config object.
     $config = \Drupal::config('nodelimit.settings');
-    $config->set('limit', $form_state['values']['limit']);
+
+    // Add configuration for each type.
+    $node_types = node_type_get_names();
+    foreach ($node_types as $type => $name) {
+      $config->set('limit_' . $type, $form_state['values']['limit_' . $type]);
+    }
+
+    // Save configuration.
     $config->save();
+
+    drupal_set_message($this->t('All limits are saved for each type.'));
   }
 } 
