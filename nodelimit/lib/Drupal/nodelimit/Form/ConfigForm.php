@@ -80,4 +80,4 @@ class ConfigForm extends ConfigFormBase {
 
     drupal_set_message($this->t('All limits are saved for each type.'));
   }
-} 
+}

@@ -1,0 +1,57 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: david
+ * Date: 16/04/2014
+ * Time: 07:50
+ */
+
+use Drupal\node\NodeInterface;
+use \Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_node_validate().
+ */
+function nodelimit_node_validate(NodeInterface $node, array $form, array &$form_state) {
+
+  // Get config object.
+  $config = \Drupal::config('nodelimit.settings');
+
+  // Get limit for its type.
+  $limit = $config->get('limit_' . $node->getType());
+
+  // Get node count.
+  $count_query = db_select('node', 'n');
+  $count_query->addExpression('COUNT(*)', 'count');
+  $count_query->condition('type', $node->getType());
+  $count = $count_query->execute()->fetchField();
+
+  if ($count >= $limit) {
+    \Drupal::formBuilder()->setErrorByName('limit_reached', $form_state, \Drupal::translation()->translate('The limit has been reached'));
+  }
+}
+
+
+/**
+ * Implements hook_node_prepare_form().
+ */
+function nodelimit_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
+
+  // Get config object.
+  $config = \Drupal::config('nodelimit.settings');
+
+  // Get limit for its type.
+  $limit = $config->get('limit_' . $node->getType());
+
+  // Get node count.
+  $count_query = db_select('node', 'n');
+  $count_query->addExpression('COUNT(*)', 'count');
+  $count_query->condition('type', $node->getType());
+  $count = $count_query->execute()->fetchField();
+
+  if ($count >= $limit) {
+    drupal_set_message(\Drupal::translation()->translate("The limit has been reached. You can't create new node of this type."), "warning");
+    print new RedirectResponse(\Drupal::url('node.add_page'));
+    exit(0);
+  }
+}
