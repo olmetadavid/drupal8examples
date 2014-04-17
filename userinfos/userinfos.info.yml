@@ -1,0 +1,5 @@
+name: User Infos
+type: module
+description: 'Display some informations about the current connected user.'
+package: CleverAge
+core: 8.x
