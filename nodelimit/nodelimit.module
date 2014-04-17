@@ -51,7 +51,17 @@ function nodelimit_node_prepare_form(NodeInterface $node, $operation, array &$fo
 
   if ($count >= $limit) {
     drupal_set_message(\Drupal::translation()->translate("The limit has been reached. You can't create new node of this type."), "warning");
-    print new RedirectResponse(\Drupal::url('node.add_page'));
-    exit(0);
+
+    /**
+     * @TODO: Try to redirect the user to the node.add_page.
+     *
+     * There is a version of the algo which works :
+     *
+     * print new RedirectResponse(\Drupal::url('node.add_page'));
+     * exit(0);
+     *
+     * But This display a text (displayed by the Symfony frameworks... :-(
+     * Try to found another solution to redirect properly the user.
+     */
   }
 }
