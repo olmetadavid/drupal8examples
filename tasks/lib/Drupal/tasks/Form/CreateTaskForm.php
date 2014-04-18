@@ -16,25 +16,24 @@ class CreateTaskForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     
-    $form['fieldset_form'] = array(
-      '#type' => 'fieldset',
+    $form['details_form'] = array(
+      '#type' => 'details',
       '#title' => $this->t('Create Form'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#open' => FALSE,
     );
-    $form['fieldset_form']['title'] = array(
+    $form['details_form']['title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Task Title'),
       '#description' => $this->t('Enter the title of the task.')
     );
     
-    $form['fieldset_form']['description'] = array(
+    $form['details_form']['description'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Task Description'),
       '#description' => $this->t('Enter the description of the task.')
     );
     
-    $form['fieldset_form']['actions'] = array(
+    $form['details_form']['actions'] = array(
       '#type' => 'actions',
       'submit' => array(
         '#type' => 'submit',
@@ -57,6 +56,18 @@ class CreateTaskForm extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     
+    // Get values.
+    $title = $form_state['values']['title'];
+    $content = $form_state['values']['description'];
+    
+    $task = \Drupal::entityManager()->getStorage('node')->create(array(
+    	'type' => 'task',
+      'title' => $title,
+      'body' => $content,
+    ));
+    $task->save();
+    
+    drupal_set_message($this->t('The task @task has been saved', array('@task' => $title)));
   }
 
   
