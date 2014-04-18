@@ -1,0 +1,5 @@
+name: Tasks Management
+type: module
+description: 'Allows to manage some tasks, based on content type'
+package: CleverAge
+core: 8.x

@@ -1,0 +1,7 @@
+tasks.page:
+  path: '/tasks'
+  defaults:
+    _content: '\Drupal\tasks\Controller\TasksController::displayList'
+    _title: 'Tasks List'
+  requirements:
+    _permission: 'access content'
